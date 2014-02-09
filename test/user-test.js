@@ -29,32 +29,29 @@ describe('User Resource', function(){
     });
   });
 
-  describe('#query (static Resource method)', function(){
+  describe('#query (static method)', function(){
     it('fetches a list from the server, returning a deferred', function(){
-      var deferred = User.query();
-      // the deferred contains the promise
-      deferred.$promise.then(function(data){
+      User.query().then(function(data){
         expect(data.length).to.equal(4);
       });
       $httpBackend.flush();
     });
   });
 
-  describe('#get (static Resource method)', function(){
+  describe('#get (static method)', function(){
     it('fetches a single item from the server, returning a deferred', function(){
-      var deferred = User.get({id: 1});
-      deferred.$promise.then(function(data){
+      User.get(1).then(function(data){
         expect(data.name).to.equal('Jim');
       });
       $httpBackend.flush();
     });
   });
 
-  describe("custom static methods", function(){
-    it("lets you make your own", function(){
+  describe.skip("custom static methods", function(){
+    //TODO try this out on the prototype method
+    it("simply methods on the constructor function", function(){
       // Jim's favorites are Sam and Jenny
-      var deferred = User.getFavorites({id: 1});
-      deferred.$promise.then(function(data){
+      User.getFavorites(1).then(function(data){
         expect(data[0].name).to.equal('Sam');
         expect(data[1].name).to.equal('Jenny');
         expect(data.length).to.equal(2);
@@ -67,10 +64,10 @@ describe('User Resource', function(){
     var jared;
 
     beforeEach(function(){
-      jared = new User({name: 'Jared'});
+      jared = new User('Jared');
     });
 
-    it("makes a new instance of the Resource", function(){
+    it("makes a new instance (this is plain JS)", function(){
       expect(jared).to.be.an.instanceof(User);
       expect(jared.name).to.equal('Jared');
     });
@@ -81,20 +78,21 @@ describe('User Resource', function(){
      */
     describe("$save action ", function(){
       it("POSTs to the server and updates itself with whatever the server returns", function(){
-        jared.$save().then(function(){
+        jared.save(true).then(function(){
+          console.log("jared", jared);
           expect(jared.id).to.equal(5); // id was returned from the server
         });
         $httpBackend.flush();
       });
     });
 
-    describe("custom instance methods", function(){
+    describe.skip("custom instance methods", function(){
       it("lets you make your own, get mapped with $ prefix", function(done){
         // add Jenny to Jared's favorites
         jared.id = 5;
         jared.$addFavorite(jenny).then(function(data){
-          console.log("data", data);
-          console.log("jared", jared);
+          // console.log("data", data);
+          // console.log("jared", jared);
           // boo... the result gets set on the instance automatically
           // find a way to prevent this...
           expect(jared.name).to.equal('Jared');
