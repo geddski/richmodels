@@ -21,11 +21,10 @@ describe('User Resource', function(){
       // mock services
       $httpBackend = $injector.get('$httpBackend');
       $httpBackend.when('GET', '/user').respond([jim, sam, jenny, mark]);
-      $httpBackend.when('GET', '/user/1/favorite').respond([sam, jenny]);
       $httpBackend.when('GET', '/user/1').respond(jim);
       $httpBackend.when('POST', '/user').respond(jared);
       $httpBackend.when('GET', '/user/5').respond(jared);
-      $httpBackend.when('POST', '/user/3/favorite?name=Jenny').respond({success: true});
+      $httpBackend.when('POST', '/user/5/favorite?id=3').respond({success: true});
     });
   });
 
@@ -42,19 +41,6 @@ describe('User Resource', function(){
     it('fetches a single item from the server, returning a deferred', function(){
       User.get(1).then(function(data){
         expect(data.name).to.equal('Jim');
-      });
-      $httpBackend.flush();
-    });
-  });
-
-  describe.skip("custom static methods", function(){
-    //TODO try this out on the prototype method
-    it("simply methods on the constructor function", function(){
-      // Jim's favorites are Sam and Jenny
-      User.getFavorites(1).then(function(data){
-        expect(data[0].name).to.equal('Sam');
-        expect(data[1].name).to.equal('Jenny');
-        expect(data.length).to.equal(2);
       });
       $httpBackend.flush();
     });
@@ -79,25 +65,19 @@ describe('User Resource', function(){
     describe("$save action ", function(){
       it("POSTs to the server and updates itself with whatever the server returns", function(){
         jared.save(true).then(function(){
-          console.log("jared", jared);
           expect(jared.id).to.equal(5); // id was returned from the server
         });
         $httpBackend.flush();
       });
     });
 
-    describe.skip("custom instance methods", function(){
-      it("lets you make your own, get mapped with $ prefix", function(done){
+    describe("custom instance methods", function(){
+      it("are just functions on the prototype", function(){
         // add Jenny to Jared's favorites
         jared.id = 5;
-        jared.$addFavorite(jenny).then(function(data){
-          // console.log("data", data);
-          // console.log("jared", jared);
-          // boo... the result gets set on the instance automatically
-          // find a way to prevent this...
+        jared.addFavorite(jenny).then(function(data){
           expect(jared.name).to.equal('Jared');
-          done();
-        })
+        });
         $httpBackend.flush();
       });
     });

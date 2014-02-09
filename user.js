@@ -14,23 +14,33 @@ app.factory('User', function($http, $q){
   };
 
   User.prototype.save = function(shouldUpdate){
-    var _this = this;
-    var url = this.id ? '/user/' + id : '/user';
+    var url = this.id ? '/user/' + id : '/user'; // TODO need something better for this too, like what Resource has?
     var httpPromise = $http({method: 'POST', url: url, data: this});
-    if (shouldUpdate !== false){
-      httpPromise.then(function(data){
-        updateModel(_this, data.data);
-      });
-    }
+    canUpdate(this, httpPromise, shouldUpdate);
     return httpPromise.then(getData);
   };
 
-  User.prototype.getFavorites = function(id){
-    return $http({method: 'GET', url: '/user/' + id + '/favorite'}).then(getData);
+  User.prototype.addFavorite = function(user){
+    return $http({method: 'POST', url: '/user/' + this.id + '/favorite?id=' + user.id}).then(getData);
   };
+
+
+
+  // utils to put into richmodel.js or something
 
   function getData(obj){
     return obj.data;
+  }
+
+  /**
+   * todo maybe mixin this shiz, less params
+   */
+  function canUpdate(instance, promise, shouldUpdate){
+    if (shouldUpdate !== false){
+      promise.then(function(data){
+        updateModel(instance, data.data);
+      });
+    }
   }
 
   function updateModel(a, b){
@@ -38,15 +48,6 @@ app.factory('User', function($http, $q){
       a[prop] = b[prop];
     });
   }
-
-  // var User = $resource('/user/:id', {id: '@id'}, {
-  //   getFavorites: { method:'GET', url: '/user/:id/favorite', isArray:true },
-  //   addFavorite: { method:'POST', url: '/user/:id/favorite', params:{id: '@id'} }
-  // });
-
-  // User.prototype.addFavorite = function(){
-  //   console.log("adding favorite");
-  // };
 
   return User;
 })
