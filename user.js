@@ -3,9 +3,10 @@ var app = angular.module('app', []);
 app.factory('User', function($http, $q){
   var User = function User(name){
     this.name = name;
+    this.favorites = [];
   };
 
-  User.query = function(){
+  User.getAll = function(){
     return $http({method: 'GET', url: '/user'}).then(getData);
   };  
 
@@ -14,14 +15,22 @@ app.factory('User', function($http, $q){
   };
 
   User.prototype.save = function(shouldUpdate){
-    var url = this.id ? '/user/' + id : '/user'; // TODO need something better for this too, like what Resource has
+    var url = this.id ? '/useryyyy/' + id : '/user'; // TODO need something better for this too, like what Resource has
     var httpPromise = $http({method: 'POST', url: url, data: this});
-    canUpdate(this, httpPromise, shouldUpdate);
+    updatesModel(this, httpPromise, shouldUpdate);
     return httpPromise.then(getData);
   };
 
   User.prototype.addFavorite = function(user){
-    return $http({method: 'POST', url: '/user/' + this.id + '/favorite?id=' + user.id}).then(getData);
+    var _this = this;
+    var httpPromise =  $http({method: 'POST', url: '/user/' + this.id + '/favorite?id=' + user.id})
+      return httpPromise.then(function(response){
+        _this.favorites.push(user);
+        return getData(response);
+      })
+      .catch(function(){
+        //Can catch here as well as in userland
+      })
   };
 
 
@@ -35,8 +44,8 @@ app.factory('User', function($http, $q){
   /**
    * todo maybe mixin this shiz, less params
    */
-  function canUpdate(instance, promise, shouldUpdate){
-    if (shouldUpdate !== false){
+  function updatesModel(instance, promise, shouldUpdate){
+    if (shouldUpdate === true){
       promise.then(function(data){
         updateModel(instance, data.data);
       });
