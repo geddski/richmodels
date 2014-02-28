@@ -46,6 +46,12 @@ app.factory('richmodel', function($http){
     }
   }
 
+  function all(fn){
+    return function(items){
+      return items.map(fn);
+    }
+  }
+
   //------mixins-------//
 
   richmodel.mixin = function(obj, mixin, args){
@@ -65,11 +71,8 @@ app.factory('richmodel', function($http){
     return function(){
       return $http({method: 'GET', url: args.url })
           .then(richmodel.getData)
-          .then(function(items){
-            return items
-              .map(args.transformIn || noTransform)
-              .map(wrap(obj))
-          });
+          .then(all(args.transformIn || noTransform))
+          .then(all(wrap(obj)))
     }
   };
 

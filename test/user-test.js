@@ -131,6 +131,7 @@ describe('User Model', function(){
       it("should also apply transforms on multiple instances", function(){
         User.getAll().then(function(users){
           expect(users[0].displayname).to.equal('jim');
+          expect(users[0]).to.be.an.instanceof(User);
         });
         $httpBackend.flush();
       });
