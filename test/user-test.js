@@ -29,7 +29,7 @@ describe('User Resource', function(){
   });
 
   describe('#query (static method)', function(){
-    it('fetches a list from the server, returning a deferred', function(){
+    it('fetches a list from the server, returning a promise', function(){
       User.query().then(function(data){
         expect(data.length).to.equal(4);
       });
@@ -38,7 +38,7 @@ describe('User Resource', function(){
   });
 
   describe('#get (static method)', function(){
-    it('fetches a single item from the server, returning a deferred', function(){
+    it('fetches a single item from the server, returning a promise', function(){
       User.get(1).then(function(data){
         expect(data.name).to.equal('Jim');
       });

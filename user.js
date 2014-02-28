@@ -14,7 +14,7 @@ app.factory('User', function($http, $q){
   };
 
   User.prototype.save = function(shouldUpdate){
-    var url = this.id ? '/user/' + id : '/user'; // TODO need something better for this too, like what Resource has?
+    var url = this.id ? '/user/' + id : '/user'; // TODO need something better for this too, like what Resource has
     var httpPromise = $http({method: 'POST', url: url, data: this});
     canUpdate(this, httpPromise, shouldUpdate);
     return httpPromise.then(getData);
