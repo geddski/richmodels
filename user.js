@@ -7,18 +7,29 @@ app.factory('User', function($http, $q){
   };
 
   User.getAll = function(){
-    return $http({method: 'GET', url: '/user'}).then(getData);
+    return $http({method: 'GET', url: '/user'}).then(richmodel.getData);
   };  
 
   User.get = function(id){
-    return $http({method: 'GET', url: '/user/' + id}).then(getData);
+    return $http({method: 'GET', url: '/user/' + id}).then(richmodel.getData);
   };
 
   User.prototype.save = function(shouldUpdate){
-    var url = this.id ? '/useryyyy/' + id : '/user'; // TODO need something better for this too, like what Resource has
-    var httpPromise = $http({method: 'POST', url: url, data: this});
-    updatesModel(this, httpPromise, shouldUpdate);
-    return httpPromise.then(getData);
+    var url = '/user';
+    var method = 'POST';
+    if (this.id){
+      //do an update rather than a create
+      url += '/' + this.id;
+      method = 'PUT';
+    }
+    var httpPromise = $http({method: method, url: url, data: this});
+    richmodel.updatesModel(this, httpPromise, shouldUpdate);
+    return httpPromise.then(richmodel.getData);
+  };
+
+  User.prototype.delete = function(){
+    var url = '/user/' + this.id;
+    return $http({method: 'DELETE', url: url}).then(richmodel.getData);
   };
 
   User.prototype.addFavorite = function(user){
@@ -26,37 +37,12 @@ app.factory('User', function($http, $q){
     var httpPromise =  $http({method: 'POST', url: '/user/' + this.id + '/favorite?id=' + user.id})
       return httpPromise.then(function(response){
         _this.favorites.push(user);
-        return getData(response);
+        return richmodel.getData(response);
       })
       .catch(function(){
         //Can catch here as well as in userland
       })
   };
-
-
-
-  // utils to put into richmodel.js or something
-
-  function getData(obj){
-    return obj.data;
-  }
-
-  /**
-   * todo maybe mixin this shiz, less params
-   */
-  function updatesModel(instance, promise, shouldUpdate){
-    if (shouldUpdate === true){
-      promise.then(function(data){
-        updateModel(instance, data.data);
-      });
-    }
-  }
-
-  function updateModel(a, b){
-    Object.getOwnPropertyNames(b).forEach(function(prop){
-      a[prop] = b[prop];
-    });
-  }
 
   return User;
 })

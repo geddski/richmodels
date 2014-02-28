@@ -3,7 +3,7 @@ var expect = chai.expect;
 describe('User Model', function(){
   var User;
   var $httpBackend;
-  
+
   // mock data
   var jim = {name: 'Jim', id: 1};
   var sam = {name: 'Sam', id: 2};
@@ -21,11 +21,12 @@ describe('User Model', function(){
 
       // mock services
       $httpBackend = $injector.get('$httpBackend');
-      $httpBackend.when('GET', '/user').respond([jim, sam, jenny, mark]);
-      $httpBackend.when('GET', '/user/1').respond(jim);
-      $httpBackend.when('POST', '/user').respond(jared);
-      $httpBackend.when('GET', '/user/5').respond(jared);
-      $httpBackend.when('POST', '/user/5/favorite?id=3').respond({success: true});
+      $httpBackend.when('GET', '/user').respond(200, [jim, sam, jenny, mark]);
+      $httpBackend.when('GET', '/user/1').respond(200, jim);
+      $httpBackend.when('POST', '/user').respond(201, jared);
+      $httpBackend.when('GET', '/user/5').respond(200, jared);
+      $httpBackend.when('DELETE', '/user/5').respond(204, {deleted: jared.id});
+      $httpBackend.when('POST', '/user/5/favorite?id=3').respond(200, {success: true});
       $httpBackend.when('POST', '/user/undefined/favorite?id=3').respond(400, {reason: 'could not add favorite to undefined user'});
     });
   });
@@ -68,7 +69,7 @@ describe('User Model', function(){
         $httpBackend.flush();
       });
 
-      it("optionally updates the model with whatever the server returns", function(){
+      it("optionally updates the model with whatever the server returns (like ngResource)", function(){
         jared.save(true).then(function(data){
           expect(jared.id).to.equal(5); // id was returned from the (mocked) server
         });
@@ -76,8 +77,14 @@ describe('User Model', function(){
       });
     });
 
-    describe.skip("#delete", function(){
-      
+    describe("#delete", function(){
+      it("is similar to #save", function(){
+        jared.id = 5;
+        jared.delete().then(function(data){
+          expect(data.deleted).to.equal(5);
+        })
+        $httpBackend.flush();
+      });
     });
 
     describe("other custom instance methods", function(){
@@ -85,15 +92,14 @@ describe('User Model', function(){
         // add Jenny to Jared's favorites
         jared.id = 5;
         jared.addFavorite(jenny).then(function(){
-          // expect(jared.name).to.equal('Jared');
           expect(jared.favorites[0]).to.equal(jenny);
         });
         $httpBackend.flush();
       });
     });
 
-    describe("error handling", function(){
-      it("using catch", function(){
+    describe("when a service call fails", function(){
+      it("the entire service response is returned, not just the data", function(){
         jared.awesome = false;
 
         jared.addFavorite(jenny)
