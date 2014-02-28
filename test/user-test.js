@@ -25,6 +25,8 @@ describe('User Model', function(){
       $httpBackend.when('GET', '/user/1').respond(200, jim);
       $httpBackend.when('POST', '/user').respond(201, jared);
       $httpBackend.when('GET', '/user/5').respond(200, jared);
+      $httpBackend.when('PUT', '/user/5').respond(200, jared);
+      $httpBackend.when('GET', '/user/4').respond(200, mark);
       $httpBackend.when('DELETE', '/user/5').respond(204, {deleted: jared.id});
       $httpBackend.when('POST', '/user/5/favorite?id=3').respond(200, {success: true});
       $httpBackend.when('POST', '/user/undefined/favorite?id=3').respond(400, {reason: 'could not add favorite to undefined user'});
@@ -115,12 +117,22 @@ describe('User Model', function(){
       });
     });
 
-    describe.skip("transform in", function(){
-      
+    describe("transform data on it way IN", function(){
+      it("should apply the transform", function(){
+        User.get(4).then(function(data){
+          expect(data.displayname).to.equal('mark');
+        });
+        $httpBackend.flush();
+      });
     });
 
-    describe.skip("transform out", function(){
-      
+    describe.only("transform data on it way OUT", function(){
+      it("should apply the transform", function(){
+        $httpBackend.expectPUT('/user/5', {"name":"Jared","favorites":[],"id":5,"cool":true});
+        jared.id = 5;
+        jared.save();
+        $httpBackend.flush();
+      });
     });
 
   });

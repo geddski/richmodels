@@ -36,6 +36,10 @@ app.factory('richmodel', function($http){
     });
   }
 
+  function noTransform(data){
+    return data;
+  }
+
   //------mixins-------//
 
   richmodel.mixin = function(obj, mixin, args){
@@ -44,7 +48,9 @@ app.factory('richmodel', function($http){
 
   richmodel.get = function(args){
     return function(id){
-      return $http({method: 'GET', url: args.url + '/' + id}).then(richmodel.getData);
+      return $http({method: 'GET', url: args.url + '/' + id})
+          .then(richmodel.getData)
+          .then(args.transformIn || noTransform)
     }
   };
 
@@ -70,7 +76,7 @@ app.factory('richmodel', function($http){
         url += '/' + this.id;
         method = 'PUT';
       }
-      var httpPromise = $http({method: method, url: url, data: this});
+      var httpPromise = $http({method: method, url: url, data: args.transformOut(this) || noTransformthis(this) });
       richmodel.updatesModel(this, httpPromise, shouldUpdate);
       return httpPromise.then(richmodel.getData);
     };
