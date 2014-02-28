@@ -127,6 +127,13 @@ describe('User Model', function(){
         });
         $httpBackend.flush();
       });
+
+      it("should also apply transforms on multiple instances", function(){
+        User.getAll().then(function(users){
+          expect(users[0].displayname).to.equal('jim');
+        });
+        $httpBackend.flush();
+      });
     });
 
     describe("transform data on it way OUT", function(){

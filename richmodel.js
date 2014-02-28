@@ -66,7 +66,9 @@ app.factory('richmodel', function($http){
       return $http({method: 'GET', url: args.url })
           .then(richmodel.getData)
           .then(function(items){
-            return items.map(wrap(obj));
+            return items
+              .map(args.transformIn || noTransform)
+              .map(wrap(obj))
           });
     }
   };
