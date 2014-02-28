@@ -126,7 +126,7 @@ describe('User Model', function(){
       });
     });
 
-    describe.only("transform data on it way OUT", function(){
+    describe("transform data on it way OUT", function(){
       it("should apply the transform", function(){
         $httpBackend.expectPUT('/user/5', {"name":"Jared","favorites":[],"id":5,"cool":true});
         jared.id = 5;
