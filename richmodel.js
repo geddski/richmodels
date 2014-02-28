@@ -40,23 +40,34 @@ app.factory('richmodel', function($http){
     return data;
   }
 
+  function wrap(obj){
+    return function(data){
+      return new obj(data);
+    }
+  }
+
   //------mixins-------//
 
   richmodel.mixin = function(obj, mixin, args){
-    obj[mixin] = richmodel[mixin](args);
+    obj[mixin] = richmodel[mixin](args, obj);
   };
 
-  richmodel.get = function(args){
+  richmodel.get = function(args, obj){
     return function(id){
       return $http({method: 'GET', url: args.url + '/' + id})
           .then(richmodel.getData)
           .then(args.transformIn || noTransform)
+          .then(wrap(obj));
     }
   };
 
-  richmodel.getAll = function(args){
+  richmodel.getAll = function(args, obj){
     return function(){
-      return $http({method: 'GET', url: args.url }).then(richmodel.getData);
+      return $http({method: 'GET', url: args.url })
+          .then(richmodel.getData)
+          .then(function(items){
+            return items.map(wrap(obj));
+          });
     }
   };
 

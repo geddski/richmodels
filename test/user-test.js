@@ -33,29 +33,32 @@ describe('User Model', function(){
     });
   });
 
-  describe('#getAll (static method)', function(){
-    it('fetches a list from the server, returning a promise', function(){
-      User.getAll().then(function(data){
-        expect(data.length).to.equal(4);
+  describe('#get (static method)', function(){
+    it('fetches a single item from the server, returning a promise', function(){
+      User.get(1).then(function(data){
+        expect(data.name).to.equal('Jim');
+        expect(data).to.be.an.instanceof(User);
       });
       $httpBackend.flush();
     });
   });
 
-  describe('#get (static method)', function(){
-    it('fetches a single item from the server, returning a promise', function(){
-      User.get(1).then(function(data){
-        expect(data.name).to.equal('Jim');
+  describe('#getAll (static method)', function(){
+    it('fetches a list from the server, returning a promise', function(){
+      User.getAll().then(function(users){
+        expect(users.length).to.equal(4);
+        expect(users[0]).to.be.an.instanceof(User);
       });
       $httpBackend.flush();
     });
   });
+
 
   describe("instances of the Model", function(){
     var jared;
 
     beforeEach(function(){
-      jared = new User('Jared');
+      jared = new User({name: 'Jared'});
     });
 
     it("makes a new instance (this is plain JS)", function(){
@@ -117,7 +120,7 @@ describe('User Model', function(){
       });
     });
 
-    describe("transform data on it way IN", function(){
+    describe("transform data on its way IN", function(){
       it("should apply the transform", function(){
         User.get(4).then(function(data){
           expect(data.displayname).to.equal('mark');

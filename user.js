@@ -1,13 +1,14 @@
 app.factory('User', function($http, $q, richmodel){
 
   // just a regular constructor function
-  var User = function User(name){
-    this.name = name;
+  function User(obj){
+    this.name = obj.name;
     this.favorites = [];
+    this.displayname = obj.displayname;
   };
 
   // add CRUD functionality (probably needs more advanced URL handling like ngResource?)
-  richmodel.CRUD(User, { url: '/user' , transformIn: transformIn, transformOut: transformOut});
+  richmodel.CRUD(User, { url: '/user', transformIn: transformIn, transformOut: transformOut});
 
   // OR could mixin just the functionality the model needs:
   // richmodel.mixin(User, 'get', { url: '/user' });
