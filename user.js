@@ -1,37 +1,21 @@
-var app = angular.module('app', []);
+app.factory('User', function($http, $q, richmodel){
 
-app.factory('User', function($http, $q){
+  // just a regular constructor function
   var User = function User(name){
     this.name = name;
     this.favorites = [];
   };
 
-  User.getAll = function(){
-    return $http({method: 'GET', url: '/user'}).then(richmodel.getData);
-  };  
+  // add CRUD functionality (needs more advanced URL handling like ngResource?)
+  richmodel.CRUD(User, { url: '/user' });
 
-  User.get = function(id){
-    return $http({method: 'GET', url: '/user/' + id}).then(richmodel.getData);
-  };
+  // OR could mixin just the functionality the model needs:
+  // richmodel.mixin(User, 'get', { url: '/user' });
+  // richmodel.mixin(User, 'getAll', { url: '/user' });
+  // richmodel.mixin(User.prototype, 'delete', { url: '/user' });
+  // richmodel.mixin(User.prototype, 'save', { url: '/user' });
 
-  User.prototype.save = function(shouldUpdate){
-    var url = '/user';
-    var method = 'POST';
-    if (this.id){
-      //do an update rather than a create
-      url += '/' + this.id;
-      method = 'PUT';
-    }
-    var httpPromise = $http({method: method, url: url, data: this});
-    richmodel.updatesModel(this, httpPromise, shouldUpdate);
-    return httpPromise.then(richmodel.getData);
-  };
-
-  User.prototype.delete = function(){
-    var url = '/user/' + this.id;
-    return $http({method: 'DELETE', url: url}).then(richmodel.getData);
-  };
-
+  // add custom functionality
   User.prototype.addFavorite = function(user){
     var _this = this;
     var httpPromise =  $http({method: 'POST', url: '/user/' + this.id + '/favorite?id=' + user.id})
@@ -40,7 +24,7 @@ app.factory('User', function($http, $q){
         return richmodel.getData(response);
       })
       .catch(function(){
-        //Can catch here as well as in userland
+        //Can catch here AND as in userland with multiple .catch() calls
       })
   };
 

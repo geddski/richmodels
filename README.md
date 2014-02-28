@@ -6,4 +6,8 @@
 -When service calls fails you want the full http response
 -Error handling can be both general (logging etc.) and specific to models
 
+## Concerns
+-Mixin approach could lead to making it difficult to track down where functions are coming from.
+-richmodel.js could grow large as we add functionality to it
+
 
