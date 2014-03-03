@@ -52,6 +52,11 @@ app.factory('richmodel', function($http){
     }
   }
 
+  //expose utilities
+  richmodel.all = all;
+  richmodel.wrap = wrap;
+  richmodel.udpate = udpate;
+
   //------mixins-------//
 
   richmodel.mixin = function(obj, mixin, args){
