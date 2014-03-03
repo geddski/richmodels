@@ -19,14 +19,10 @@ app.factory('User', function($http, $q, richmodel){
   // add custom functionality
   User.prototype.addFavorite = function(user){
     var _this = this;
-    var httpPromise =  $http({method: 'POST', url: '/user/' + this.id + '/favorite?id=' + user.id})
-      return httpPromise.then(function(response){
-        _this.favorites.push(user);
-        return richmodel.getData(response);
-      })
-      .catch(function(){
-        //Can catch here AND as in userland with multiple .catch() calls
-      })
+    return $http({method: 'POST', url: '/user/' + this.id + '/favorite?id=' + user.id})
+        .then(function(){
+          _this.favorites.push(user);
+        });
   };
 
 
