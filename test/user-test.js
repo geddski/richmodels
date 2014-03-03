@@ -29,6 +29,7 @@ describe('User Model', function(){
       $httpBackend.when('GET', '/user/4').respond(200, mark);
       $httpBackend.when('DELETE', '/user/5').respond(204, {deleted: jared.id});
       $httpBackend.when('POST', '/user/5/favorite?id=3').respond(200, {success: true});
+      $httpBackend.when('GET', '/user/5/followers').respond(200, [jared, jim, sam]);
       $httpBackend.when('POST', '/user/undefined/favorite?id=3').respond(400, {reason: 'could not add favorite to undefined user'});
     });
   });
@@ -100,6 +101,18 @@ describe('User Model', function(){
           expect(jared.favorites[0]).to.equal(jenny);
         });
         $httpBackend.flush();
+      });
+
+      describe("leveraging richmodel.js utils", function(){
+        it("works?", function(){
+          jared.id = 5;
+
+          jared.getFollowers().then(function(followers){
+            expect(followers.length).to.equal(3);
+            expect(followers[0]).to.be.an.instanceof(User);
+          });
+          $httpBackend.flush();
+        });
       });
     });
 

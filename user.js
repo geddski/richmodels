@@ -16,13 +16,21 @@ app.factory('User', function($http, $q, richmodel){
   richmodel.mixin(User.prototype, 'save', { url: '/user', transformIn: transformIn, transformOut: transformOut });
   richmodel.mixin(User.prototype, 'delete', { url: '/user' });
 
-  // add custom functionality
+  // custom functionality just using $http
   User.prototype.addFavorite = function(user){
     var _this = this;
     return $http({method: 'POST', url: '/user/' + this.id + '/favorite?id=' + user.id})
         .then(function(){
           _this.favorites.push(user);
         });
+  };
+
+  // custom functionality leveraging richmodel utilities
+  User.prototype.getFollowers = function(){
+    return $http({method: 'GET', url: '/user/' + this.id + '/followers'})
+        .then(richmodel.getData)
+        .then(richmodel.all(transformIn))
+        .then(richmodel.all(richmodel.wrap(User)))
   };
 
 
