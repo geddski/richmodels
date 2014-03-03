@@ -89,7 +89,8 @@ app.factory('richmodel', function($http){
   };
 
   richmodel.save = function(args){
-    return function(shouldUpdate){
+    return function(options){
+      options = options || {};
       var url = args.url;
       var method = 'POST';
       if (this.id){
@@ -99,7 +100,7 @@ app.factory('richmodel', function($http){
       }
       var transformOut = args.transformOut || noTransform;
       var httpPromise = $http({method: method, url: url, data: transformOut(this) });
-      richmodel.updatesModel(this, httpPromise, shouldUpdate);
+      richmodel.updatesModel(this, httpPromise, options.update);
       return httpPromise.then(richmodel.getData);
     };
   }

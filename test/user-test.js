@@ -76,7 +76,7 @@ describe('User Model', function(){
       });
 
       it("optionally updates the model with whatever the server returns (like ngResource)", function(){
-        jared.save(true).then(function(data){
+        jared.save({update: true}).then(function(data){
           expect(jared.id).to.equal(5); // id was returned from the (mocked) server
         });
         $httpBackend.flush();
