@@ -35,9 +35,9 @@ describe('User Model', function(){
 
   describe('#get (static method)', function(){
     it('fetches a single item from the server, returning a promise', function(){
-      User.get(1).then(function(data){
-        expect(data.name).to.equal('Jim');
-        expect(data).to.be.an.instanceof(User);
+      User.get(1).then(function(user){
+        expect(user.name).to.equal('Jim');
+        expect(user).to.be.an.instanceof(User);
       });
       $httpBackend.flush();
     });
