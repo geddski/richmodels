@@ -92,7 +92,8 @@ app.factory('richmodel', function($http){
         url += '/' + this.id;
         method = 'PUT';
       }
-      var httpPromise = $http({method: method, url: url, data: args.transformOut(this) || noTransformthis(this) });
+      var transformOut = args.transformOut || noTransform;
+      var httpPromise = $http({method: method, url: url, data: transformOut(this) });
       richmodel.updatesModel(this, httpPromise, shouldUpdate);
       return httpPromise.then(richmodel.getData);
     };
