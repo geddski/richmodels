@@ -11,10 +11,10 @@ app.factory('User', function($http, $q, richmodel){
   richmodel.CRUD(User, { url: '/user', transformIn: transformIn, transformOut: transformOut});
 
   // OR could mixin just the functionality the model needs:
-  richmodel.mixin(User, 'get', { url: '/user', transformIn: transformIn, transformOut: transformOut });
-  richmodel.mixin(User, 'getAll', { url: '/user', transformIn: transformIn, transformOut: transformOut });
-  richmodel.mixin(User.prototype, 'save', { url: '/user', transformIn: transformIn, transformOut: transformOut });
-  richmodel.mixin(User.prototype, 'delete', { url: '/user' });
+  // richmodel.mixin(User, 'get', { url: '/user', transformIn: transformIn, transformOut: transformOut });
+  // richmodel.mixin(User, 'getAll', { url: '/user', transformIn: transformIn, transformOut: transformOut });
+  // richmodel.mixin(User.prototype, 'save', { url: '/user', transformIn: transformIn, transformOut: transformOut });
+  // richmodel.mixin(User.prototype, 'delete', { url: '/user' });
 
   // custom functionality just using $http
   User.prototype.addFavorite = function(user){
