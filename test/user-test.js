@@ -104,7 +104,7 @@ describe('User Model', function(){
       });
 
       describe("leveraging richmodel.js utils", function(){
-        it("works?", function(){
+        it("should be convenient too", function(){
           jared.id = 5;
 
           jared.getFollowers().then(function(followers){
