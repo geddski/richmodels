@@ -1,5 +1,12 @@
 # Rich Models
 
+## Setup
+1. Fork repo
+2. npm install -g bower karma karma-mocha karma-chai
+3. git clone your fork
+4. cd richmodels && bower install
+5. karma start (then open browser to http://localhost:9876/)
+
 ## Ideas
 
  - Promises, Yo. Combined with chaining and FP they're awesome.
