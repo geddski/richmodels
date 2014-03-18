@@ -67,7 +67,7 @@ app.factory('model', function($http){
     return function(id){
       return $http({method: 'GET', url: args.url + '/' + id})
           .then(model.getData)
-          .then(args.transformIn || noTransform)
+          .then(args.transformIn || obj.fromJSON || noTransform)
           .then(wrap(obj));
     }
   };
@@ -76,7 +76,7 @@ app.factory('model', function($http){
     return function(){
       return $http({method: 'GET', url: args.url })
           .then(model.getData)
-          .then(all(args.transformIn || noTransform))
+          .then(all(args.transformIn || obj.fromJSON || noTransform))
           .then(all(wrap(obj)))
     }
   };
@@ -98,7 +98,7 @@ app.factory('model', function($http){
         url += '/' + this.id;
         method = 'PUT';
       }
-      var transformOut = args.transformOut || noTransform;
+      var transformOut = args.transformOut || this.constructor.toJSON || noTransform;
       var httpPromise = $http({method: method, url: url, data: transformOut(this) });
       model.updatesModel(this, httpPromise, options.update);
       return httpPromise.then(model.getData);
