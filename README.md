@@ -20,4 +20,4 @@
 ## Concerns
 
  - Mixin approach could lead to making it difficult to track down where functions are coming from.
- - richmodel.js could grow large as we add functionality to it
+ - model.js could grow large as we add functionality to it

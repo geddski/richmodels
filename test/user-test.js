@@ -103,7 +103,7 @@ describe('User Model', function(){
         $httpBackend.flush();
       });
 
-      describe("leveraging richmodel.js utils", function(){
+      describe("leveraging model.js utils", function(){
         it("should be convenient too", function(){
           jared.id = 5;
 
