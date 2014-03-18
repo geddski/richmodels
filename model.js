@@ -1,18 +1,18 @@
-app.factory('richmodel', function($http){
+app.factory('model', function($http){
 
-  var richmodel = {};
+  var model = {};
 
   /**
    * return just the data from a succesful response
    */
-  richmodel.getData = function(obj){
+  model.getData = function(obj){
     return obj.data;
   };
 
   /**
    * update the model with the results from the service call (like ngResource)
    */
-  richmodel.updatesModel = function(instance, promise, shouldUpdate){
+  model.updatesModel = function(instance, promise, shouldUpdate){
     if (shouldUpdate === true){
       promise.then(function(data){
         udpate(instance, data.data);
@@ -23,11 +23,11 @@ app.factory('richmodel', function($http){
   /**
    * add CRUD functionality to a model
    */
-  richmodel.CRUD = function(obj, args){
-    richmodel.mixin(obj, 'get', args);
-    richmodel.mixin(obj, 'getAll', args);
-    richmodel.mixin(obj.prototype, 'delete', args);
-    richmodel.mixin(obj.prototype, 'save', args);
+  model.CRUD = function(obj, args){
+    model.mixin(obj, 'get', args);
+    model.mixin(obj, 'getAll', args);
+    model.mixin(obj.prototype, 'delete', args);
+    model.mixin(obj.prototype, 'save', args);
   }
 
   function udpate(a, b){
@@ -53,42 +53,42 @@ app.factory('richmodel', function($http){
   }
 
   //expose utilities
-  richmodel.all = all;
-  richmodel.wrap = wrap;
-  richmodel.udpate = udpate;
+  model.all = all;
+  model.wrap = wrap;
+  model.udpate = udpate;
 
   //------mixins-------//
 
-  richmodel.mixin = function(obj, mixin, args){
-    obj[mixin] = richmodel[mixin](args, obj);
+  model.mixin = function(obj, mixin, args){
+    obj[mixin] = model[mixin](args, obj);
   };
 
-  richmodel.get = function(args, obj){
+  model.get = function(args, obj){
     return function(id){
       return $http({method: 'GET', url: args.url + '/' + id})
-          .then(richmodel.getData)
+          .then(model.getData)
           .then(args.transformIn || noTransform)
           .then(wrap(obj));
     }
   };
 
-  richmodel.getAll = function(args, obj){
+  model.getAll = function(args, obj){
     return function(){
       return $http({method: 'GET', url: args.url })
-          .then(richmodel.getData)
+          .then(model.getData)
           .then(all(args.transformIn || noTransform))
           .then(all(wrap(obj)))
     }
   };
 
-  richmodel.delete = function(args){
+  model.delete = function(args){
     return function(id){
       var url = args.url + '/' + this.id;
-      return $http({method: 'DELETE', url: url}).then(richmodel.getData);
+      return $http({method: 'DELETE', url: url}).then(model.getData);
     };
   };
 
-  richmodel.save = function(args){
+  model.save = function(args){
     return function(options){
       options = options || {};
       var url = args.url;
@@ -100,10 +100,10 @@ app.factory('richmodel', function($http){
       }
       var transformOut = args.transformOut || noTransform;
       var httpPromise = $http({method: method, url: url, data: transformOut(this) });
-      richmodel.updatesModel(this, httpPromise, options.update);
-      return httpPromise.then(richmodel.getData);
+      model.updatesModel(this, httpPromise, options.update);
+      return httpPromise.then(model.getData);
     };
   }
 
-  return richmodel;
+  return model;
 });

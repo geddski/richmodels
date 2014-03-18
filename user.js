@@ -1,6 +1,7 @@
-app.factory('User', function($http, $q, richmodel){
+app.factory('User', function($http, $q, model){
 
   // just a regular constructor function
+  // model(User, ['name', 'favorites']);
   function User(obj){
     this.name = obj.name;
     this.favorites = [];
@@ -8,13 +9,13 @@ app.factory('User', function($http, $q, richmodel){
   };
 
   // add CRUD functionality (probably needs more advanced URL handling like ngResource?)
-  richmodel.CRUD(User, { url: '/user', transformIn: transformIn, transformOut: transformOut});
+  model.CRUD(User, { url: '/user', transformIn: transformIn, transformOut: transformOut});
 
   // OR could mixin just the functionality the model needs:
-  // richmodel.mixin(User, 'get', { url: '/user', transformIn: transformIn, transformOut: transformOut });
-  // richmodel.mixin(User, 'getAll', { url: '/user', transformIn: transformIn, transformOut: transformOut });
-  // richmodel.mixin(User.prototype, 'save', { url: '/user', transformIn: transformIn, transformOut: transformOut });
-  // richmodel.mixin(User.prototype, 'delete', { url: '/user' });
+  // model.mixin(User, 'get', { url: '/user', transformIn: transformIn, transformOut: transformOut });
+  // model.mixin(User, 'getAll', { url: '/user', transformIn: transformIn, transformOut: transformOut });
+  // model.mixin(User.prototype, 'save', { url: '/user', transformIn: transformIn, transformOut: transformOut });
+  // model.mixin(User.prototype, 'delete', { url: '/user' });
 
   // custom functionality just using $http
   User.prototype.addFavorite = function(user){
@@ -25,12 +26,12 @@ app.factory('User', function($http, $q, richmodel){
         });
   };
 
-  // custom functionality leveraging richmodel utilities
+  // custom functionality leveraging model utilities
   User.prototype.getFollowers = function(){
     return $http({method: 'GET', url: '/user/' + this.id + '/followers'})
-        .then(richmodel.getData)
-        .then(richmodel.all(transformIn))
-        .then(richmodel.all(richmodel.wrap(User)))
+        .then(model.getData)
+        .then(model.all(transformIn))
+        .then(model.all(model.wrap(User)))
   };
 
 
