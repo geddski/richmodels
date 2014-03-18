@@ -12,13 +12,8 @@ app.factory('User', function($http, $q, model){
   function User(obj){
     // defaults
     this.favorites = [];
-    // from data (only if undefined)
+    // from data
     this.fromJSON(obj);
-
-    // this.id = obj.id;
-    // this.name = obj.name;
-    // this.displayname = obj.displayname;
-    
   };
 
   // OR could mixin just the functionality the model needs:
