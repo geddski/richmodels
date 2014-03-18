@@ -1,16 +1,16 @@
+/**
+ * TODO:
+ * needs more advanced URL handling like ngResource
+ */
 app.factory('User', function($http, $q, model){
 
-  // just a regular constructor function
-  // model(User, ['name', 'favorites']);
+  // annotate the model functionality onto a plain Constructor
+  model(User, { url: '/user' });
   function User(obj){
     this.name = obj.name;
     this.favorites = [];
     this.displayname = obj.displayname;
   };
-
-  // add CRUD functionality (probably needs more advanced URL handling like ngResource?)
-  model.CRUD(User, { url: '/user' });
-  // model.CRUD(User, { url: '/user', transformIn: fromJSON, transformOut: toJSON});
 
   // OR could mixin just the functionality the model needs:
   // model.mixin(User, 'get', { url: '/user', transformIn: fromJSON, transformOut: toJSON });

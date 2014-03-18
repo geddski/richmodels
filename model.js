@@ -1,6 +1,14 @@
 app.factory('model', function($http){
 
-  var model = {};
+  /**
+   * add CRUD functionality to a model
+   */
+  var model = function(obj, args){
+    model.mixin(obj, 'get', args);
+    model.mixin(obj, 'getAll', args);
+    model.mixin(obj.prototype, 'delete', args);
+    model.mixin(obj.prototype, 'save', args);
+  };
 
   /**
    * return just the data from a succesful response
@@ -19,16 +27,6 @@ app.factory('model', function($http){
       });
     }
   };
-
-  /**
-   * add CRUD functionality to a model
-   */
-  model.CRUD = function(obj, args){
-    model.mixin(obj, 'get', args);
-    model.mixin(obj, 'getAll', args);
-    model.mixin(obj.prototype, 'delete', args);
-    model.mixin(obj.prototype, 'save', args);
-  }
 
   function udpate(a, b){
     Object.getOwnPropertyNames(b).forEach(function(prop){
