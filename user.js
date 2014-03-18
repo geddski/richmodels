@@ -13,9 +13,9 @@ app.factory('User', function($http, $q, model){
   };
 
   // OR could mixin just the functionality the model needs:
-  // model.mixin(User, 'get', { url: '/user', transformIn: fromJSON, transformOut: toJSON });
-  // model.mixin(User, 'getAll', { url: '/user', transformIn: fromJSON, transformOut: toJSON });
-  // model.mixin(User.prototype, 'save', { url: '/user', transformIn: fromJSON, transformOut: toJSON });
+  // model.mixin(User, 'get', { url: '/user' });
+  // model.mixin(User, 'getAll', { url: '/user' });
+  // model.mixin(User.prototype, 'save', { url: '/user' });
   // model.mixin(User.prototype, 'delete', { url: '/user' });
 
   // custom functionality just using $http
