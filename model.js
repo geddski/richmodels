@@ -1,4 +1,4 @@
-app.factory('model', function($http){
+app.factory('model', function($http, $q, $angularCacheFactory){
 
   /**
    * add CRUD functionality to a model
@@ -28,6 +28,33 @@ app.factory('model', function($http){
     }
   };
 
+  function cache(key){
+    return function(obj){
+      var cache = $angularCacheFactory.get('UserCache') || $angularCacheFactory('UserCache');
+      cache.put(key, obj);
+      return obj;
+    }
+  }
+
+  function checkCache(key){
+    var deferred = $q.defer();
+    var cache = $angularCacheFactory.get('UserCache');
+    if (cache){
+      var joe = cache.get('/joe');
+      if (joe){
+        deferred.resolve(joe);
+      }
+      else{
+        deferred.reject();
+      }
+    }
+    else{
+      deferred.reject();
+    }
+    
+    return deferred.promise;
+  }
+
   function udpate(a, b){
     Object.getOwnPropertyNames(b).forEach(function(prop){
       a[prop] = b[prop];
@@ -54,6 +81,7 @@ app.factory('model', function($http){
   model.all = all;
   model.wrap = wrap;
   model.udpate = udpate;
+  model.cache = cache;
 
   //------mixins-------//
 
@@ -62,11 +90,24 @@ app.factory('model', function($http){
   };
 
   model.get = function(args, obj){
-    return function(id){
-      return $http({method: 'GET', url: args.url + '/' + id})
-          .then(model.getData)
-          .then(args.transformIn || obj.fromJSON || noTransform)
-          .then(wrap(obj));
+    return function(id, shouldCache){
+      // try the cache first, if nothing then fetch from server
+      return checkCache('/joe')
+          .catch(function(){
+            return $http({method: 'GET', url: args.url + '/' + id})
+                .then(model.getData)
+                .then(args.transformIn || obj.fromJSON || noTransform)
+          })
+          // regardless of source, wrap as instances and update the cache
+          .then(wrap(obj))
+          //TODO: conditionally probably?
+          .then(cache('/joe'));
+
+      // return $http({method: 'GET', url: args.url + '/' + id})
+          // .then(model.getData)
+          // .then(args.transformIn || obj.fromJSON || noTransform)
+          // .then(wrap(obj))
+          // .then(cache('/joe'));
     }
   };
 

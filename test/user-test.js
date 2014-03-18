@@ -161,4 +161,20 @@ describe('User Model', function(){
 
   });
 
+  describe("caching", function(){
+    it("should not make additional requests while cache is valid", function(){
+      
+      // do two "requests" in a row, the first should cache
+      User.get(1).then(function(){
+        User.get(1).then(function(user){
+          console.log("user", user);
+        });        
+      });
+
+      // flush only one request, so if more than one was made the caching failed
+      $httpBackend.flush(1);
+      $httpBackend.verifyNoOutstandingRequest();
+    });
+  });
+
 });

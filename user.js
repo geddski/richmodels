@@ -5,11 +5,20 @@
 app.factory('User', function($http, $q, model){
 
   // annotate the model functionality onto a plain Constructor
+  // model.json(User, ['id', 'name', 'displayname']);
+  // model.rest(User, { url: '/user' });
+  // model.cache(User, { field: 'id', expires: '100000' });
   model(User, { url: '/user' });
   function User(obj){
-    this.name = obj.name;
+    // defaults
     this.favorites = [];
+    // from data (only if undefined)
+    // this.fromJSON(obj);
+
+    this.id = obj.id;
+    this.name = obj.name;
     this.displayname = obj.displayname;
+    
   };
 
   // OR could mixin just the functionality the model needs:
@@ -40,6 +49,7 @@ app.factory('User', function($http, $q, model){
   // Any common transforms could be moved out of the model.
   // Maybe we even allow multiple transform functions
 
+  //TODO move to prototype
   User.fromJSON = function(data){
     data.displayname = data.name.toLowerCase();
     return data;
