@@ -5,19 +5,19 @@
 app.factory('User', function($http, $q, model){
 
   // annotate the model functionality onto a plain Constructor
-  // model.json(User, ['id', 'name', 'displayname']);
+  model.json(User, ['id', 'name', 'displayname']);
   // model.rest(User, { url: '/user' });
   // model.cache(User, { field: 'id', expires: '100000' });
-  model(User, { url: '/user' });
+  // model(User, { url: '/user' });
   function User(obj){
     // defaults
     this.favorites = [];
     // from data (only if undefined)
-    // this.fromJSON(obj);
+    this.fromJSON(obj);
 
-    this.id = obj.id;
-    this.name = obj.name;
-    this.displayname = obj.displayname;
+    // this.id = obj.id;
+    // this.name = obj.name;
+    // this.displayname = obj.displayname;
     
   };
 

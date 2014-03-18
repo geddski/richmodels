@@ -18,6 +18,22 @@ app.factory('model', function($http, $q, $angularCacheFactory){
   };
 
   /**
+   * add toJSON and fromJSON functions
+   */
+  model.json = function(contructor, fields){
+    contructor.prototype.toJSON = function(){
+      //pluck?
+    };
+
+    // add only the fields from the object that exist in the fields array
+    contructor.prototype.fromJSON = function(obj){
+      _.each(fields, function(field){
+        this[field] = obj[field];
+      }, this);
+    };
+  }
+
+  /**
    * update the model with the results from the service call (like ngResource)
    */
   model.updatesModel = function(instance, promise, shouldUpdate){

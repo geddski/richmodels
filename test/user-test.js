@@ -34,6 +34,20 @@ describe('User Model', function(){
     });
   });
 
+  describe.only("json", function(){
+    describe("fromJSON", function(){
+      it("gets a fromJSON function that sets the correct fields", function(){
+        var joe = new User({name: 'Joe'});
+        expect(joe.name).to.equal('Joe');
+      });
+
+      it("ignores fields not in the whitelist", function(){
+        var joe = new User({number: '801-982-8098'});
+        expect(joe.number).to.equal(undefined);
+      });
+    });
+  });
+
   describe('#get (static method)', function(){
     it('fetches a single item from the server, returning a promise', function(){
       User.get(1).then(function(user){
