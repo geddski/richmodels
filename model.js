@@ -22,7 +22,11 @@ app.factory('model', function($http, $q, $angularCacheFactory){
    */
   model.json = function(contructor, fields){
     contructor.prototype.toJSON = function(){
-      //pluck?
+      var json = {};
+      _.each(fields, function(field){
+        json[field] = this[field];
+      }, this);
+      return json;
     };
 
     // add only the fields from the object that exist in the fields array

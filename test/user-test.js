@@ -46,6 +46,18 @@ describe('User Model', function(){
         expect(joe.number).to.equal(undefined);
       });
     });
+
+    describe("toJSON", function(){
+      it("gets a toJSON function that extracts the correct fields", function(){
+        var joe = new User({name: 'Joe'});
+        expect(joe.toJSON().name).to.equal('Joe');
+      });
+
+      it("ignores fields not in the whitelist", function(){
+        var joe = new User({number: '801-982-8098'});
+        expect(joe.toJSON().number).to.equal(undefined);
+      });
+    });
   });
 
   describe('#get (static method)', function(){
