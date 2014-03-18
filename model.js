@@ -23,7 +23,7 @@ app.factory('model', function($http, $q, $angularCacheFactory){
   model.updatesModel = function(instance, promise, shouldUpdate){
     if (shouldUpdate === true){
       promise.then(function(data){
-        udpate(instance, data.data);
+        update(instance, data.data);
       });
     }
   };
@@ -55,7 +55,7 @@ app.factory('model', function($http, $q, $angularCacheFactory){
     return deferred.promise;
   }
 
-  function udpate(a, b){
+  function update(a, b){
     Object.getOwnPropertyNames(b).forEach(function(prop){
       a[prop] = b[prop];
     });
@@ -80,7 +80,7 @@ app.factory('model', function($http, $q, $angularCacheFactory){
   //expose utilities
   model.all = all;
   model.wrap = wrap;
-  model.udpate = udpate;
+  model.udpate = update;
   model.cache = cache;
 
   //------mixins-------//
