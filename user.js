@@ -5,22 +5,15 @@
 app.factory('User', function($http, $q, model){
 
   // annotate the model functionality onto a plain Constructor
-  model.json(User, ['id', 'name', 'displayname']);
-  // model.rest(User, { url: '/user' });
-  // model.cache(User, { field: 'id', expires: '100000' });
-  // model(User, { url: '/user' });
+  model.json(User, ['id', 'name', 'displayname', 'favorites']);
+  model.rest(User, { url: '/user' });
+  // model.cache(User, { key: 'id', expires: '100000' });
   function User(obj){
     // defaults
     this.favorites = [];
     // from data
     this.fromJSON(obj);
   };
-
-  // OR could mixin just the functionality the model needs:
-  // model.mixin(User, 'get', { url: '/user' });
-  // model.mixin(User, 'getAll', { url: '/user' });
-  // model.mixin(User.prototype, 'save', { url: '/user' });
-  // model.mixin(User.prototype, 'delete', { url: '/user' });
 
   // custom functionality just using $http
   User.prototype.addFavorite = function(user){
@@ -39,6 +32,12 @@ app.factory('User', function($http, $q, model){
         .then(model.all(model.wrap(User)))
   };
 
+  // OR could mixin just the functionality the model needs:
+  // model.mixin(User, 'get', { url: '/user' });
+  // model.mixin(User, 'getAll', { url: '/user' });
+  // model.mixin(User.prototype, 'save', { url: '/user' });
+  // model.mixin(User.prototype, 'delete', { url: '/user' });
+
 
   // Transform data on its way to and from the server.
   // Any common transforms could be moved out of the model.
@@ -50,7 +49,7 @@ app.factory('User', function($http, $q, model){
     return data;
   }
 
-  User.toJSON = function(data){
+  User.transformOut = function(data){
     data.cool = true;
     return data;
   }

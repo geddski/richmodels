@@ -34,7 +34,9 @@ describe('User Model', function(){
     });
   });
 
-  describe.only("json", function(){
+  /** JSON **/
+
+  describe("json", function(){
     describe("fromJSON", function(){
       it("gets a fromJSON function that sets the correct fields", function(){
         var joe = new User({name: 'Joe'});
@@ -57,8 +59,17 @@ describe('User Model', function(){
         var joe = new User({number: '801-982-8098'});
         expect(joe.toJSON().number).to.equal(undefined);
       });
+
+      it("should not set undefined", function(){
+        //TODO
+      });
     });
+
+    //TODO overwriting toJSON/fromJSON
   });
+
+
+  /** REST **/
 
   describe('#get (static method)', function(){
     it('fetches a single item from the server, returning a promise', function(){
@@ -180,12 +191,15 @@ describe('User Model', function(){
       it("should apply the transform", function(){
         $httpBackend.expectPUT('/user/5', {"name":"Jared","favorites":[],"id":5,"cool":true});
         jared.id = 5;
+        console.log("jared", jared);
         jared.save();
         $httpBackend.flush();
       });
     });
 
   });
+
+  /** CACHING **/
 
   describe("caching", function(){
     it("should not make additional requests while cache is valid", function(){

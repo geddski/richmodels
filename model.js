@@ -3,19 +3,15 @@ app.factory('model', function($http, $q, $angularCacheFactory){
   /**
    * add CRUD functionality to a model
    */
-  var model = function(obj, args){
+  var model = function(){};
+
+  model.rest = function(obj, args){
     model.mixin(obj, 'get', args);
     model.mixin(obj, 'getAll', args);
     model.mixin(obj.prototype, 'delete', args);
-    model.mixin(obj.prototype, 'save', args);
+    model.mixin(obj.prototype, 'save', args);  
   };
 
-  /**
-   * return just the data from a succesful response
-   */
-  model.getData = function(obj){
-    return obj.data;
-  };
 
   /**
    * add toJSON and fromJSON functions
@@ -32,11 +28,19 @@ app.factory('model', function($http, $q, $angularCacheFactory){
     // add only the fields from the object that exist in the fields array
     contructor.prototype.fromJSON = function(obj){
       _.each(fields, function(field){
+        if (!obj[field]) { return; }
         this[field] = obj[field];
       }, this);
     };
   }
 
+  /**
+   * return just the data from a succesful response
+   */
+  model.getData = function(obj){
+    return obj.data;
+  };
+  
   /**
    * update the model with the results from the service call (like ngResource)
    */
@@ -157,8 +161,14 @@ app.factory('model', function($http, $q, $angularCacheFactory){
         url += '/' + this.id;
         method = 'PUT';
       }
-      var transformOut = args.transformOut || this.constructor.toJSON || noTransform;
-      var httpPromise = $http({method: method, url: url, data: transformOut(this) });
+
+      var data = this;
+      if (_.isFunction(this.toJSON)){
+        data = this.toJSON();
+      }
+
+      var transformOut = args.transformOut || this.constructor.transformOut || noTransform;
+      var httpPromise = $http({method: method, url: url, data: transformOut(data) });
       model.updatesModel(this, httpPromise, options.update);
       return httpPromise.then(model.getData);
     };
