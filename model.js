@@ -120,7 +120,7 @@ app.factory('model', function($http, $q, $angularCacheFactory){
           .catch(function(){
             return $http({method: 'GET', url: args.url + '/' + id})
                 .then(model.getData)
-                .then(args.transformIn || obj.fromJSON || noTransform)
+                .then(args.transformIn || obj.transformIn || noTransform)
           })
           // regardless of source, wrap as instances and update the cache
           .then(wrap(obj))
@@ -129,7 +129,7 @@ app.factory('model', function($http, $q, $angularCacheFactory){
 
       // return $http({method: 'GET', url: args.url + '/' + id})
           // .then(model.getData)
-          // .then(args.transformIn || obj.fromJSON || noTransform)
+          // .then(args.transformIn || obj.transformIn || noTransform)
           // .then(wrap(obj))
           // .then(cache('/joe'));
     }
@@ -137,9 +137,10 @@ app.factory('model', function($http, $q, $angularCacheFactory){
 
   model.getAll = function(args, obj){
     return function(){
+      // console.log("obj.transformIn", obj.transformIn.toString());
       return $http({method: 'GET', url: args.url })
           .then(model.getData)
-          .then(all(args.transformIn || obj.fromJSON || noTransform))
+          .then(all(args.transformIn || obj.transformIn || noTransform))
           .then(all(wrap(obj)))
     }
   };

@@ -28,7 +28,7 @@ app.factory('User', function($http, $q, model){
   User.prototype.getFollowers = function(){
     return $http({method: 'GET', url: '/user/' + this.id + '/followers'})
         .then(model.getData)
-        .then(model.all(User.fromJSON))
+        .then(model.all(User.transformIn))
         .then(model.all(model.wrap(User)))
   };
 
@@ -44,7 +44,7 @@ app.factory('User', function($http, $q, model){
   // Maybe we even allow multiple transform functions
 
   //TODO move to prototype
-  User.fromJSON = function(data){
+  User.transformIn = function(data){
     data.displayname = data.name.toLowerCase();
     return data;
   }

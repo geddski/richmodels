@@ -191,7 +191,6 @@ describe('User Model', function(){
       it("should apply the transform", function(){
         $httpBackend.expectPUT('/user/5', {"name":"Jared","favorites":[],"id":5,"cool":true});
         jared.id = 5;
-        console.log("jared", jared);
         jared.save();
         $httpBackend.flush();
       });
@@ -207,7 +206,7 @@ describe('User Model', function(){
       // do two "requests" in a row, the first should cache
       User.get(1).then(function(){
         User.get(1).then(function(user){
-          console.log("user", user);
+          
         });        
       });
 
