@@ -2,9 +2,9 @@
 
 ## Setup
 1. Fork repo
-2. npm install -g bower karma karma-mocha karma-chai karma-chrome-launcher
+2. npm install -g karma karma-mocha karma-chai karma-chrome-launcher
 3. git clone your fork
-4. cd richmodels && bower install
+4. cd richmodels
 5. karma start
 
 ## Ideas
