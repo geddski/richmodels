@@ -3,13 +3,13 @@ module.exports = function(config) {
     // basePath: '../..',
     frameworks: ['mocha', 'chai'],
     files: [
-      'bower_components/angular/angular.js',
-      'bower_components/angular-mocks/angular-mocks.js',
-      'bower_components/lodash/dist/lodash.js',
+      'lib/angular.js',
+      'lib/**/*.js',
       'app.js',
       '**/*.js',
       'test/**/*.js'
     ],
+    browsers: ['Chrome'],
     autoWatch: true
   });
 }; 
