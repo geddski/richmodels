@@ -205,8 +205,7 @@ describe('User Model', function(){
       
       // do two "requests" in a row, the first should cache
       User.get({id: 1}).then(function(){
-        User.get({id: 1}).then(function(user){
-          
+        User.get({id: 1}).then(function(){
         });        
       });
 

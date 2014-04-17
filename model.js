@@ -54,7 +54,7 @@ app.factory('model', function($http, $q, $angularCacheFactory){
 
   function cache(key){
     return function(obj){
-      var cache = $angularCacheFactory.get('UserCache') || $angularCacheFactory('UserCache');
+      var cache = $angularCacheFactory.get('UrlCache') || $angularCacheFactory('UrlCache');
       cache.put(key, obj);
       return obj;
     }
@@ -62,11 +62,11 @@ app.factory('model', function($http, $q, $angularCacheFactory){
 
   function checkCache(key){
     var deferred = $q.defer();
-    var cache = $angularCacheFactory.get('UserCache');
+    var cache = $angularCacheFactory.get('UrlCache');
     if (cache){
-      var joe = cache.get('/joe');
-      if (joe){
-        deferred.resolve(joe);
+      var item = cache.get(key);
+      if (item){
+        deferred.resolve(item);
       }
       else{
         deferred.reject();
@@ -139,20 +139,20 @@ app.factory('model', function($http, $q, $angularCacheFactory){
     obj[mixin] = model[mixin](args, obj);
   };
 
+  //TODO: conditional caching
   model.get = function(args, obj){
-    return function(options, shouldCache){
+    return function(options){
       // try the cache first, if nothing then fetch from server
-      return checkCache('/joe')
-          .catch(function(){
-            var url = buildUrl(args.url, options);
-            return $http({method: 'GET', url: url})
-                .then(model.getData)
-                .then(args.transformIn || obj.transformIn || noTransform)
-          })
-          // regardless of source, wrap as instances and update the cache
-          .then(wrap(obj))
-          //TODO: conditionally probably?
-          .then(cache('/joe'));
+      var url = buildUrl(args.url, options);
+      return checkCache(url)
+        .catch(function(){
+          return $http({method: 'GET', url: url})
+              .then(model.getData)
+              .then(args.transformIn || obj.transformIn || noTransform)
+        })
+        // regardless of source, wrap as instances and update the cache
+        .then(wrap(obj))
+        .then(cache(url));
     }
   };
 
