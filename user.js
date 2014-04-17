@@ -6,7 +6,7 @@ app.factory('User', function($http, $q, model){
 
   // annotate the model functionality onto a plain Constructor
   model.json(User, ['id', 'name', 'displayname', 'favorites']);
-  model.rest(User, { url: '/user' });
+  model.rest(User, { url: '/user/:id' });
   // model.cache(User, { key: 'id', expires: '100000' });
   function User(obj){
     // defaults

@@ -101,6 +101,32 @@ app.factory('model', function($http, $q, $angularCacheFactory){
     }
   }
 
+  /**
+    * TODO: flesh this out more
+    * Assumptions for now:
+    *  - If the paramVals is not an object, then we'll replace every
+    *    propName with the paramVals value.
+    *  - If the paramVals is falsey, we'll replace propNames with an empty string
+    *  - If the parsedUrl ends with a slash, we'll strip it.
+    * @param url - the URL with /:propNames to replace with values
+    * @param paramVals - the values to replace the /:propNames with
+    * @returns {string} - The parsed URL
+    */
+   function buildUrl(url, paramVals) {
+     var isObject = angular.isObject(paramVals);
+     var isEmpty = !paramVals;
+     var parsedUrl = url.replace(/:(\w+)/g, function(match, param) {
+       if (isEmpty) {
+         return '';
+       } else if (isObject) {
+         return paramVals[param] || '';
+       } else {
+         return paramVals;
+       }
+     });
+     return parsedUrl.replace(/\/$/, '');
+   }
+
   //expose utilities
   model.all = all;
   model.wrap = wrap;
@@ -114,11 +140,12 @@ app.factory('model', function($http, $q, $angularCacheFactory){
   };
 
   model.get = function(args, obj){
-    return function(id, shouldCache){
+    return function(options, shouldCache){
       // try the cache first, if nothing then fetch from server
       return checkCache('/joe')
           .catch(function(){
-            return $http({method: 'GET', url: args.url + '/' + id})
+            var url = buildUrl(args.url, options);
+            return $http({method: 'GET', url: url})
                 .then(model.getData)
                 .then(args.transformIn || obj.transformIn || noTransform)
           })
@@ -126,19 +153,13 @@ app.factory('model', function($http, $q, $angularCacheFactory){
           .then(wrap(obj))
           //TODO: conditionally probably?
           .then(cache('/joe'));
-
-      // return $http({method: 'GET', url: args.url + '/' + id})
-          // .then(model.getData)
-          // .then(args.transformIn || obj.transformIn || noTransform)
-          // .then(wrap(obj))
-          // .then(cache('/joe'));
     }
   };
 
   model.getAll = function(args, obj){
     return function(){
-      // console.log("obj.transformIn", obj.transformIn.toString());
-      return $http({method: 'GET', url: args.url })
+      var url = buildUrl(args.url);
+      return $http({method: 'GET', url: url })
           .then(model.getData)
           .then(all(args.transformIn || obj.transformIn || noTransform))
           .then(all(wrap(obj)))
@@ -146,8 +167,9 @@ app.factory('model', function($http, $q, $angularCacheFactory){
   };
 
   model.delete = function(args){
-    return function(id){
-      var url = args.url + '/' + this.id;
+    return function(){
+      // var url = args.url + '/' + this.id;
+      var url = buildUrl(args.url, this);
       return $http({method: 'DELETE', url: url}).then(model.getData);
     };
   };
@@ -155,7 +177,7 @@ app.factory('model', function($http, $q, $angularCacheFactory){
   model.save = function(args){
     return function(options){
       options = options || {};
-      var url = args.url;
+      var url = buildUrl(args.url, options);
       var method = 'POST';
       if (this.id){
         //if has an id, do an update rather than a create

@@ -73,7 +73,7 @@ describe('User Model', function(){
 
   describe('#get (static method)', function(){
     it('fetches a single item from the server, returning a promise', function(){
-      User.get(1).then(function(user){
+      User.get({id: 1}).then(function(user){
         expect(user.name).to.equal('Jim');
         expect(user).to.be.an.instanceof(User);
       });
@@ -172,7 +172,7 @@ describe('User Model', function(){
 
     describe("transform data on its way IN", function(){
       it("should apply the transform", function(){
-        User.get(4).then(function(data){
+        User.get({id: 4}).then(function(data){
           expect(data.displayname).to.equal('mark');
         });
         $httpBackend.flush();
@@ -204,8 +204,8 @@ describe('User Model', function(){
     it("should not make additional requests while cache is valid", function(){
       
       // do two "requests" in a row, the first should cache
-      User.get(1).then(function(){
-        User.get(1).then(function(user){
+      User.get({id: 1}).then(function(){
+        User.get({id: 1}).then(function(user){
           
         });        
       });
