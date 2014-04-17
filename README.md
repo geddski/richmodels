@@ -1,4 +1,5 @@
 # Rich Models
+**DISCLAIMER: This is a potential replacement for ngResource in Angular 2, and will either change a lot or go away completely. Please don't use in production projects**
 
 ## Setup
 1. Fork repo
@@ -17,7 +18,7 @@
  - A clean & chainable API is desirable
  - Error handling can be both general (logging etc.) and specific to models. Multiple promise.catch() calls enable this easily.
 
-## Concerns
+## Potential Concerns
 
  - Mixin approach could lead to making it difficult to track down where functions are coming from.
- - model.js could grow large as we add functionality to it
+ - model.js could grow large as functionality is added to it
