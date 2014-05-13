@@ -13,7 +13,7 @@ describe('User Model', function(){
 
   beforeEach(function(){
     //load the module
-    module('app');
+    module('geddski.richmodels');
 
     inject(function($injector) {
       // get the User Model

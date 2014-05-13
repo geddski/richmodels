@@ -1,1 +1,1 @@
-var app = angular.module('app', ['jmdobry.angular-cache']);
+angular.module('geddski.richmodels', ['jmdobry.angular-cache']);
