@@ -2,7 +2,7 @@
  * TODO:
  * needs more advanced URL handling like ngResource
  */
-app.factory('User', function($http, $q, model){
+angular.module('geddski.richmodels').factory('User', function($http, $q, model){
 
   // annotate the model functionality onto a plain Constructor
   model.json(User, ['id', 'name', 'displayname', 'favorites']);

@@ -1,4 +1,4 @@
-app.factory('model', function($http, $q, $angularCacheFactory){
+angular.module('geddski.richmodels').factory('model', function($http, $q, $angularCacheFactory){
 
   /**
    * add CRUD functionality to a model
