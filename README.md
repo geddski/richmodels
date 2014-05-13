@@ -3,10 +3,10 @@
 
 ## Setup
 1. Fork repo
-2. npm install -g karma karma-mocha karma-chai karma-chrome-launcher
-3. git clone your fork
-4. cd richmodels
-5. karma start
+2. git clone your fork
+3. cd richmodels
+4. npm install
+5. npm test
 
 ## Ideas
 

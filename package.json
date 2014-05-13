@@ -1,0 +1,33 @@
+{
+  "name": "richmodels",
+  "version": "0.0.0",
+  "description": "A ngResource replacement with promises",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "karma": "^0.12.16",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.1.3",
+    "karma-mocha": "^0.1.3",
+    "mocha": "^1.18.2"
+  },
+  "scripts": {
+    "test": "./node_modules/karma/bin/karma start karma.conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://geddski@github.com/geddski/richmodels.git"
+  },
+  "keywords": [
+    "AngularJS"
+  ],
+  "author": "Dave Geddes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geddski/richmodels/issues"
+  },
+  "homepage": "https://github.com/geddski/richmodels"
+}
